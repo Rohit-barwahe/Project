@@ -5,32 +5,36 @@ let btns = ["yellow", "red", "purple", "green"];
 
 let started = false;
 let level = 0;
+let highScore = 0;   // 🟢 new variable for highest score
 
 let h2 = document.querySelector("h2");
 
+// 🟢 create an element to show highest score
+let scoreBoard = document.createElement("h3");
+scoreBoard.innerText = `Highest Score: ${highScore}`;
+document.body.appendChild(scoreBoard);
+
 document.addEventListener("keypress", function () {
-    if(started == false){
+    if (started == false) {
         console.log("Game is started");
         started = true;
-
         levelUp();
     }
 });
 
 function gameFlash(btn) {
     btn.classList.add("flash");
-    setTimeout(function  () {
+    setTimeout(function () {
         btn.classList.remove("flash");
     }, 250);
 }
 
 function userFlash(btn) {
     btn.classList.add("userflash");
-    setTimeout(function  () {
+    setTimeout(function () {
         btn.classList.remove("userflash");
     }, 250);
 }
-
 
 function levelUp() {
     userSeq = [];
@@ -46,15 +50,19 @@ function levelUp() {
 }
 
 function checkAns(idx) {
-    if(userSeq[idx] == gameSeq[idx]){
-        if(userSeq.length == gameSeq.length) {
+    if (userSeq[idx] == gameSeq[idx]) {
+        if (userSeq.length == gameSeq.length) {
             setTimeout(levelUp, 1000);
         }
-    }
-    else {
+    } else {
+        if (level > highScore) {
+            highScore = level;
+            scoreBoard.innerText = `Highest Score: ${highScore}`;
+        }
+
         h2.innerHTML = `Game Over! Your score was <b>${level}</b> <br> Press any key to start.`;
         document.querySelector("body").style.backgroundColor = "red";
-        setTimeout( function () {
+        setTimeout(function () {
             document.querySelector("body").style.backgroundColor = "white";
         }, 150);
         reset();
@@ -68,11 +76,11 @@ function btnPress() {
     userColor = btn.getAttribute("id");
     userSeq.push(userColor);
 
-    checkAns(userSeq.length-1);
+    checkAns(userSeq.length - 1);
 }
 
 let allBtns = document.querySelectorAll(".btn");
-for(btn of allBtns) {
+for (btn of allBtns) {
     btn.addEventListener("click", btnPress);
 }
 
